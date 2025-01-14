@@ -245,8 +245,8 @@ timeseries_boxplots <- long.cluster.df %>%
        #          linewidth = 1.3, color = 'black') +
     geom_vline(xintercept = 10.5, linetype = 'dashed', linewidth = 0.4) +
     scale_x_discrete(labels = c('', '', '', '', '-5', '', '', '', '', '0', '', '', '', '', '5', '', '', '', '', '10', '', '', '', '')) +
-    geom_text(aes(x = relative_year + 0.025, y = y.alt, label = significance),
-              data = divergence.df, size = 12, fontface = 'bold') +
+    # geom_text(aes(x = relative_year + 0.025, y = y.alt, label = significance),
+    #           data = divergence.df, size = 12, fontface = 'bold') +
     annotate(geom = 'text', x = 10.1, y = -900, label = 'Fire', size = 12, angle = 90) +
     annotate(geom = 'text', x = 1, y = 300, label = 'a', size = 24, fontface = 'bold') +
     labs(x = 'Years post-fire', y = 'NBR (baseline-adjusted)', color = 'Cluster') +
@@ -1135,7 +1135,7 @@ y.alt <- c(0, 0, 0, 0, 0, 0, 0,
            0, 0, 0, -300, -280, -260, -250,
            -200, -150, -100, -75, -40, -10, 20,
            40, 60, 70, 80)
-divergence.df <- as.data.frame(relative_year, significance, y)
+divergence.df <- data.frame(relative_year, significance, y)
 
 field.cluster.df %>% 
   group_by(field.cluster) %>% 
@@ -1346,15 +1346,29 @@ ggsave(here('figures', 'main_figures', 'bottom.up.figure.png'), width = 22, heig
 ```
 
 ## Stats Tests
-### Clusters Diverging
+### Clusters Diverging Over Time
 ```{r}
-for(i in 9:23) {
-  df <- long.field.cluster.df %>% 
-    filter(relative_year == i)
-  mod <- lmer(yearly_delta_nbr ~ field.cluster + (1|fire), df)
-  print(i)
-  print(emmeans(mod, pairwise ~ field.cluster, adjust = 'tukey'))
+## updating this to run as a function  
+## get emmeans for each year
+calc_lmeremmeans <- function(df, var, year){
+  year_filt <- year
+  filt_df <- df %>% 
+    filter(relative_year == year_filt)
+  mod <- lmer(yearly_delta_nbr  ~ field.cluster + (1|fire), filt_df)
+  ## convert out_emmans to df
+  out_emeans <- summary(emmeans(mod, pairwise ~ field.cluster, adjust = 'tukey'))$contrasts
+  diff_ <- out_emeans$p.value < 0.05
+  out_sf_df <- data.frame(clust = out_emeans$contrast, 
+                          est = out_emeans$estimate, 
+                          SE = out_emeans$SE,
+                          df = round(out_emeans$df,2),
+                          p = out_emeans$p.value,
+                          diff = diff_,
+                          year = year)
 }
+## Question for joe - why is this only 9:23 ? 
+sig_by_year <- lapply(1:23, function(x) calc_lmeremmeans(long.field.cluster.df, 'yearly_delta_nbr', x)) %>% bind_rows()
+
 ```
 
 ### Diffferences Between Clusters

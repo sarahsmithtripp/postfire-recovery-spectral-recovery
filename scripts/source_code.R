@@ -4,7 +4,7 @@
 library(tidyverse)
 library(raster)
 library(here)
-library(rgdal)
+#library(rgdal)
 library(caTools)
 library(magick) # for animation
 library(sf)
@@ -32,11 +32,25 @@ library(sjPlot) # for tab_model
 library(kableExtra)
 library(gtools)
 library(performance)
-library(remef)
+#library(remef)
 library(ggh4x)
 library(emmeans)
 library(extrafont)
-extract = raster::extract
+
+
+# Load using pac_man ------------------------------------------------------
+library(pacman)
+pacman::p_load(tidyverse, here, caTools, magick, sf, prism, stars, ncdf4,
+               RColorBrewer, proj4, naniar, ggpp, ggfortify, leaflet, corrplot,
+               GGally, factoextra, cluster, ggpubr, sp, terra, ggridges, av,
+               lme4, lmerTest, sjPlot, kableExtra, gtools, performance, remef, ggh4x,
+               emmeans, extrafont)
+
+## load from git hub 
+devtools::install_github("https://github.com/hohenstein/remef.git", force = F)
+library(remef)
+## fix functions that are overwritten
+extract = terra::extract
 group_by = dplyr::group_by
 arrow = ggplot2::arrow
 
@@ -52,8 +66,9 @@ elev_upp_bins <- c(1300,2100,2900,3700,5000) # Old values: 2500, 3000, 3500, 500
 yrs_arr <- c(1997:2018)
 
 # Elevation raster data
-dir <- "/Volumes/Meddens/GitHub Repo/wsu-meddens-lab/data/WBP_MPB" # where to access the dem_clip.tif file
-dem_clip2 <- raster(file.path(dir, "dem_clip.tif"))
+#dir <- "/Volumes/Meddens/GitHub Repo/wsu-meddens-lab/data/WBP_MPB" # where to access the dem_clip.tif file
+dir <- "data/blue_mtns_misc/dem_clip.tif"
+dem_clip2 <- terra::rast(file.path(here(), "data/blue_mtns_misc/dem_clip.tif"))
 
 # ggplot2 themes
 getwd()
@@ -118,3 +133,4 @@ pf_climate_var_names <- c(postfire_ppt = 'Mean annual precip.',
                           postfire_vpdmax = 'Mean annual VPDmax',
                           postfire_vpdmin = 'Mean annual VPDmin',
                           postfire_tmean = 'Mean annual Tmean')
+
