@@ -1,50 +1,51 @@
 # SOURCE CODE
 
 # necessary packages
-library(tidyverse)
-library(raster)
-library(here)
-#library(rgdal)
-library(caTools)
-library(magick) # for animation
-library(sf)
-library(prism)
-library(stars)
-library(ncdf4)
-library(RColorBrewer)
-library(proj4)
-library(naniar)
-library(ggpp)
-library(ggfortify)
-library(leaflet)
-library(corrplot)
-library(GGally)
-library(factoextra)
-library(cluster)
-library(ggpubr)
-library(sp)
-library(terra)
-library(ggridges)
-library(av) # to save NBR animation
-library(lme4) # for mixed effects models
-library(lmerTest)
-library(sjPlot) # for tab_model
-library(kableExtra)
-library(gtools)
-library(performance)
-#library(remef)
-library(ggh4x)
-library(emmeans)
-library(extrafont)
+# library(tidyverse)
+# library(raster)
+# library(here)
+# #library(rgdal)
+# library(caTools)
+# library(magick) # for animation
+# library(sf)
+# library(prism)
+# library(stars)
+# library(ncdf4)
+# library(RColorBrewer)
+# library(proj4)
+# library(naniar)
+# library(ggpp)
+# library(ggfortify)
+# library(leaflet)
+# library(corrplot)
+# library(GGally)
+# library(factoextra)
+# library(cluster)
+# library(ggpubr)
+# library(sp)
+# library(terra)
+# library(ggridges)
+# library(av) # to save NBR animation
+# library(lme4) # for mixed effects models
+# library(lmerTest)
+# library(sjPlot) # for tab_model
+# library(kableExtra)
+# library(gtools)
+# library(performance)
+# #library(remef)
+# library(ggh4x)
+# library(emmeans)
+# library(extrafont)
 
 
 # Load using pac_man ------------------------------------------------------
+
 library(pacman)
 pacman::p_load(tidyverse, here, caTools, magick, sf, prism, stars, ncdf4,
                RColorBrewer, proj4, naniar, ggpp, ggfortify, leaflet, corrplot,
                GGally, factoextra, cluster, ggpubr, sp, terra, ggridges, av,
-               lme4, lmerTest, sjPlot, kableExtra, gtools, performance, remef, ggh4x,
-               emmeans, extrafont)
+               lme4, lmerTest, sjPlot, kableExtra, gtools, performance,
+               ggh4x, extrafont)
 
 ## load from git hub 
 devtools::install_github("https://github.com/hohenstein/remef.git", force = F)

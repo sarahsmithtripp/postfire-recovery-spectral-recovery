@@ -13,12 +13,12 @@ library(here)
 here = here::here
 
 source(here("scripts", "source_code.R"))
-library(emmeans)
+#library(emmeans)
 
 # Blue Mtns. Raster
-blue.mtns.ras <- raster(here('data', 'blue_mtns_misc', 'bluemtnsras.tif'))
+blue.mtns.ras <- rast(here('data', 'blue_mtns_misc', 'bluemtnsras.tif'))
 # Postfire Regen. Data (Davis et al)
-postfire.regen <- raster(here('data', 'regen_prob', 'postfire_regen_prob.tif'))
+postfire.regen <- rast(here('data', 'regen_prob', 'postfire_regen_prob.tif'))
 
 wide.df <- read.csv(here('data', 'processed_data', 'wide.df.csv')) %>% 
   select(-X)
@@ -144,7 +144,13 @@ aggregate(traj.df, by=list(cluster=km$cluster), mean)
 #add cluster assigment to dataframes
 traj.scaled.df <- cbind(traj.scaled.df, cluster = km$cluster)
 traj.df <- cbind(traj.df, cluster = km$cluster)
+## here is the summary for spectral cluster elements 
 wide.cluster.df <- merge(traj.df, wide.df, by = c('postdisturbance_nbr', 'delta_nbr', 'relative_regrowth', 'pct_recovery'))
+
+## summary metrics (for Sarah Smith-Tripps Review)
+traj.df.summary <- wide.cluster.df %>% group_by(cluster) %>% 
+  summarise(slope_= mean(postfire_fitted_slope), 
+            sd = sd(postfire_fitted_slope))
 ```
 
 ### Time Series (Points)
@@ -1057,6 +1063,11 @@ field.cluster.df <- merge(field.df, main.df, by = c('grass.pct', 'shrub.pct', 'l
   distinct(Plot, .keep_all = T) #%>% # removing duplicates
   #rename(green.pct = green.pct.x, npv.pct = npv.pct.x) %>% 
   #select(-green.pct.y, -npv.pct.y)
+
+field.cluster.sum <- field.cluster.df %>% select(-starts_with('0')) %>%
+  group_by(field.cluster) %>% 
+  summarise(slope_NBR = mean(postfire_fitted_slope), 
+            sd_NBR = sd(postfire_fitted_slope))
 ```
 
 ## Visualizations
